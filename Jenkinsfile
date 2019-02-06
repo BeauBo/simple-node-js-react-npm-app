@@ -9,7 +9,7 @@ pipeline {
     CI = 'true'
   }
   parameters {
-    booleanParam(defaultValue: true, description: 'Auto deploy when build is successful', name: 'shouldBeDeployed')
+    booleanParam(defaultValue: true, description: 'Auto deploy when build is successful', name: 'autoDeploy')
   }
   stages {
     stage('Build') {
