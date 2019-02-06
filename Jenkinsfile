@@ -13,6 +13,9 @@ pipeline {
   }
   stages {
     stage('Build') {
+      when {
+        expression { params.autoDeploy }
+      }
       steps {
         sh 'npm install'
       }
