@@ -5,13 +5,20 @@ pipeline {
       args'-p 3000:3000'
     }
   }
+
   environment {
     CI = 'true'
   }
+
   parameters {
     booleanParam(defaultValue: true, description: 'Auto deploy when build is successful', name: 'autoDeploy')
     string(defaultValue: 'ap-south-1', description: 'AWS Region', name: 'region')
   }
+
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '2'))
+  }
+
   stages {
     stage('Build') {
       when {
