@@ -10,6 +10,7 @@ pipeline {
   }
   parameters {
     booleanParam(defaultValue: true, description: 'Auto deploy when build is successful', name: 'autoDeploy')
+    string(defaultValue: 'ap-south-1', description: 'AWS Region', name: 'region')
   }
   stages {
     stage('Build') {
@@ -21,11 +22,17 @@ pipeline {
       }
     }
     stage('Test') {
+      when {
+        expression { params.autoDeploy }
+      }
       steps {
         sh './jenkins/scripts/test.sh'
       }
     }
     stage('Deploy') {
+      when {
+        expression { params.autoDeploy }
+      }
       steps {
         sh './jenkins/scripts/deliver.sh'
         input message: 'Finished using the web site? (Click "Proceed" to continue)'
