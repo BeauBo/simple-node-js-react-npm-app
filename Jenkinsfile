@@ -1,18 +1,16 @@
+env.TARGET_ENV = env.BRANCH_NAME == 'master' ? 'production' : 'integration'
+
+
 pipeline {
-  agent {
-    docker {
-      image 'node:6-alpine'
-      args'-p 3000:3000'
-    }
-  }
+  agent any
 
   environment {
-    CI = 'true'
+    AWESOME_ENV=getAWESOMEEnv(env.TARGET_ENV)
   }
 
   parameters {
-    booleanParam(defaultValue: true, description: 'Auto deploy when build is successful', name: 'autoDeploy')
-    string(defaultValue: 'ap-south-1', description: 'AWS Region', name: 'region')
+    booleanParam(defaultValue: env.TARGET_ENV == 'integration', description: 'Auto deploy when build is successful', name: 'autoDeploy')
+    string(defaultValue: 'us-east-1', description: 'AWS Region', name: 'region')
   }
 
   options {
@@ -28,7 +26,7 @@ pipeline {
         sh 'npm install'
       }
     }
-    stage('Test') {
+    stage('Docker') {
       when {
         expression { params.autoDeploy }
       }
@@ -47,4 +45,8 @@ pipeline {
       }
     }
   }
+}
+
+def getAWESOMEEnv(env) {
+  env
 }
